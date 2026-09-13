@@ -22,12 +22,13 @@ async function bootstrap() {
     origin: true,
   });
 
+  const port = config.get<number>("port")!;
+
   const swaggerConfig = new DocumentBuilder()
-    .setTitle("Auth Boilerplate API")
-    .setDescription(
-      "Google / Facebook / Apple / GitHub OAuth for web + mobile, with JWT refresh-token rotation",
-    )
+    .setTitle("Cashify API")
+    .setDescription("Backend API for the Cashify fintech application.")
     .setVersion("1.0")
+    .addServer(`http://localhost:${port}`, "Local environment")
     .addBearerAuth()
     .addTag("auth")
     .addTag("users")
@@ -35,7 +36,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup("docs", app, document);
 
-  const port = config.get<number>("port")!;
   await app.listen(port);
   console.log(`API running on http://localhost:${port}`);
   console.log(`Swagger docs at http://localhost:${port}/docs`);

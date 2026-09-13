@@ -2,30 +2,27 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Post,
   Req,
   UseGuards,
-  HttpCode,
-  HttpStatus,
 } from "@nestjs/common";
-import { AuthGuard } from "@nestjs/passport";
 import { ConfigService } from "@nestjs/config";
 import {
-  ApiTags,
+  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
-  ApiBearerAuth,
-  ApiExcludeEndpoint,
-  ApiBody,
+  ApiTags,
 } from "@nestjs/swagger";
 import type { Request } from "express";
 import { AuthService } from "./auth.service";
+import { CurrentUser } from "./decorators/current-user.decorator";
+import { LogoutDto, RefreshTokenDto } from "./dto/refresh-token.dto";
+import { LoginDto, RegisterDto } from "./dto/register.dto";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { JwtRefreshGuard } from "./guards/jwt-refresh.guard";
 import { LocalAuthGuard } from "./guards/local-auth.guard";
-import { CurrentUser } from "./decorators/current-user.decorator";
-import { RefreshTokenDto, LogoutDto } from "./dto/refresh-token.dto";
-import { RegisterDto, LoginDto } from "./dto/register.dto";
 
 @ApiTags("auth")
 @Controller("auth")
@@ -42,18 +39,6 @@ export class AuthController {
 
   @Post("register")
   @ApiOperation({ summary: "Create an account with email + password" })
-  @ApiBody({
-    schema: { $ref: "#/components/schemas/RegisterDto" },
-    examples: {
-      default: {
-        value: {
-          email: "jane@company.com",
-          password: "correcthorsebattery",
-          name: "Jane Doe",
-        },
-      },
-    },
-  })
   @ApiResponse({
     status: 201,
     description: "Account created successfully.",
@@ -76,14 +61,6 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   @ApiOperation({ summary: "Log in with email + password" })
-  @ApiBody({
-    schema: { $ref: "#/components/schemas/LoginDto" },
-    examples: {
-      default: {
-        value: { email: "jane@company.com", password: "correcthorsebattery" },
-      },
-    },
-  })
   @ApiResponse({ status: 200, description: "Token pair returned" })
   @ApiResponse({ status: 401, description: "Invalid email or password" })
   async login(@Req() req: Request, @Body() _body: LoginDto) {

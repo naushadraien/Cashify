@@ -13,6 +13,7 @@ export default (): ExpoConfig => {
     icon: "./assets/images/icon.png",
 
     ios: {
+      icon: "./assets/images/icon.png",
       supportsTablet: false,
       bundleIdentifier: "com.cashify.mobile",
       infoPlist: {
@@ -22,7 +23,7 @@ export default (): ExpoConfig => {
     },
     android: {
       adaptiveIcon: {
-        backgroundColor: "#0A0A0A",
+        backgroundColor: "#262A33",
         foregroundImage: "./assets/images/icon.png",
       },
       package: "com.cashify.mobile",
@@ -32,9 +33,10 @@ export default (): ExpoConfig => {
       [
         "expo-splash-screen",
         {
-          image: "./assets/images/splash.png",
-          resizeMode: "cover",
-          backgroundColor: "#0A0A0A",
+          image: "./assets/images/icon.png",
+          imageWidth: 200,
+          resizeMode: "contain",
+          backgroundColor: "#262A33",
         },
       ],
       "expo-dev-client",
