@@ -1,0 +1,24 @@
+echo ""
+echo "🚀 Pre-push checks — this runs before every git push"
+echo "======================================================"
+
+echo ""
+echo "📦 [1/2] Building API (apps/api)..."
+cd apps/api && pnpm run build
+if [ $? -ne 0 ]; then
+  echo "❌ API build failed. Push aborted."
+  exit 1
+fi
+cd ../..
+
+echo ""
+echo "📦 [2/2] Type-checking Mobile (apps/mobile)..."
+cd apps/mobile && pnpm exec tsc --noEmit
+if [ $? -ne 0 ]; then
+  echo "❌ Mobile type-check failed. Push aborted."
+  exit 1
+fi
+cd ../..
+
+echo ""
+echo "✅ All checks passed! Pushing..."

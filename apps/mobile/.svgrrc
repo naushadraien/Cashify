@@ -1,0 +1,12 @@
+{
+  "replaceAttrValues": {
+    "#000": "{props.color}",
+    "#000000": "{props.color}",
+    "#ffffff": "{props.color}",
+    "#fff": "{props.color}",
+    "currentColor": "{props.color}"
+  },
+  "native": true,
+  "typescript": true,
+  "expandProps": true
+}
