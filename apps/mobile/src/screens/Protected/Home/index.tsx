@@ -3,6 +3,7 @@ import { getGreeting } from "@/utils/greetings";
 import { useAuth } from "@/providers";
 import { COLORS } from "@/theme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Toast from "react-native-toast-message";
 import React from "react";
 import {
   StyleSheet,
@@ -24,8 +25,18 @@ export function HomeScreen() {
   const handleToggleBiometric = async (value: boolean) => {
     if (value) {
       await enableBiometric();
+      Toast.show({
+        type: "success",
+        text1: "Biometrics Enabled",
+        text2: "You can now log in securely using Face ID or Fingerprint.",
+      });
     } else {
       await disableBiometric();
+      Toast.show({
+        type: "info",
+        text1: "Biometrics Disabled",
+        text2: "Biometric login has been turned off for your account.",
+      });
     }
   };
 

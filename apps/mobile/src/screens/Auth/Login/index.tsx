@@ -28,7 +28,9 @@ export function LoginScreen() {
   const { authenticate, isSupported, isEnrolled } = useBiometric();
   const { setRef, focusNext } = useInputFocus(2);
   const [showPassword, setShowPassword] = useState(false);
-  const [showBioModal, setShowBioModal] = useState(false);
+  const [bioModalState, setBioModalState] = useState<
+    "hidden" | "no-session" | "no-hardware"
+  >("hidden");
 
   const showBiometric = biometricAvailable && isSupported && isEnrolled;
 
@@ -54,10 +56,20 @@ export function LoginScreen() {
 
   const handleBiometric = async () => {
     if (isLoginLoading) return;
-    if (!biometricAvailable || !isSupported || !isEnrolled) {
-      setShowBioModal(true);
+
+    // Step 1: Check for a stored session first
+    if (!biometricAvailable) {
+      setBioModalState("no-session");
       return;
     }
+
+    // Step 2: Only if a stored session DOES exist, check device biometric capability
+    if (!isSupported || !isEnrolled) {
+      setBioModalState("no-hardware");
+      return;
+    }
+
+    // Step 3: If both pass, proceed with biometric authentication
     try {
       await authenticate("Log in to Cashify");
       await onBiometricLogin();
@@ -247,8 +259,16 @@ export function LoginScreen() {
       </KeyboardAwareScrollView>
       <ModalLoader loading={isLoginLoading} />
       <BiometricSetupModal
-        visible={showBioModal}
-        onClose={() => setShowBioModal(false)}
+        visible={bioModalState !== "hidden"}
+        onClose={() => setBioModalState("hidden")}
+        {...(bioModalState === "no-session"
+          ? {
+              iconName: "account-off-outline",
+              title: "No Account Logged In Here",
+              description:
+                "Log in with your email and password first, and we'll securely enable biometric login for next time.",
+            }
+          : {})}
       />
     </SafeAreaWrapper>
   );

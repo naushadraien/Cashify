@@ -8,11 +8,17 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 type BiometricSetupModalProps = {
   visible: boolean;
   onClose: () => void;
+  iconName?: keyof typeof MaterialCommunityIcons.glyphMap;
+  title?: string;
+  description?: string;
 };
 
 export function BiometricSetupModal({
   visible,
   onClose,
+  iconName = "fingerprint-off",
+  title = "Biometrics Not Set Up",
+  description = "It looks like you don't have Face ID or Fingerprint set up on this device. Please enable biometrics in your device settings to securely log in.",
 }: BiometricSetupModalProps) {
   return (
     <Modal
@@ -27,14 +33,14 @@ export function BiometricSetupModal({
 
           <View style={styles.iconContainer}>
             <MaterialCommunityIcons
-              name="fingerprint-off"
+              name={iconName}
               size={48}
               color={COLORS.PRIMARY}
             />
           </View>
 
           <Typography variant="h2" style={styles.title}>
-            Biometrics Not Set Up
+            {title}
           </Typography>
 
           <Typography
@@ -42,9 +48,7 @@ export function BiometricSetupModal({
             color={COLORS.MUTED_FOREGROUND}
             style={styles.message}
           >
-            It looks like you don't have Face ID or Fingerprint set up on this
-            device. Please enable biometrics in your device settings to securely
-            log in.
+            {description}
           </Typography>
 
           <Button

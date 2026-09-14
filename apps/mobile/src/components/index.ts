@@ -8,3 +8,4 @@ export * from "./Typography";
 export * from "./Loader";
 export * from "./SvgIcon";
 export * from "./BiometricSetupModal";
+export * from "./ScreenLoader";
