@@ -9,7 +9,7 @@ import requestAPI from "@/utils/request-api";
 import { tokenManager, setLogoutHandler } from "@/config/axios-instance";
 import { safeAsyncStorage } from "@/utils/storage";
 import { AUTH_CONSTANTS } from "@/constants/auth";
-import { LoginInput, RegisterInput, AuthTokens, AuthUser } from "@repo/schemas";
+import { AuthTokens, AuthUser } from "@repo/schemas";
 
 interface AuthContextType {
   user: AuthUser | null;
@@ -17,10 +17,8 @@ interface AuthContextType {
   isAuthLoading: boolean;
   isLoginLoading: boolean;
   biometricAvailable: boolean;
-  onLogin: (data: LoginInput) => Promise<void>;
-  onRegister: (data: RegisterInput) => Promise<void>;
+  saveAuthData: (tokens: AuthTokens) => Promise<void>;
   onLogout: () => Promise<void>;
-  onBiometricLogin: () => Promise<void>;
   enableBiometric: () => Promise<void>;
   disableBiometric: () => Promise<void>;
 }
@@ -92,33 +90,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(tokens.user);
   };
 
-  const onLogin = async (data: LoginInput) => {
-    setIsLoginLoading(true);
-    try {
-      const response = await requestAPI<AuthTokens>({
-        url: "/auth/login",
-        method: "post",
-        data,
-      });
-      await saveAuthData(response);
-    } finally {
-      setIsLoginLoading(false);
-    }
-  };
-
-  const onRegister = async (data: RegisterInput) => {
-    setIsLoginLoading(true);
-    try {
-      await requestAPI({
-        url: "/auth/register",
-        method: "post",
-        data,
-      });
-    } finally {
-      setIsLoginLoading(false);
-    }
-  };
-
   const onLogout = async () => {
     // For this implementation, we will assume standard logout keeps biometrics active.
     // A "Remove Account" feature could pass false to wipe everything.
@@ -149,29 +120,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const onBiometricLogin = async () => {
-    setIsLoginLoading(true);
-    try {
-      const refreshToken = await tokenManager.getRefreshToken();
-      if (!refreshToken) {
-        throw new Error(
-          "No refresh token available. Please login with password first.",
-        );
-      }
-
-      const response = await requestAPI<AuthTokens>({
-        url: "/auth/refresh",
-        method: "post",
-        data: { refreshToken },
-      });
-      await saveAuthData(response);
-    } catch (e) {
-      throw e;
-    } finally {
-      setIsLoginLoading(false);
-    }
-  };
-
   const enableBiometric = async () => {
     if (user?.email) {
       const bioKey = `${AUTH_CONSTANTS.BIOMETRIC_ENABLED_PREFIX}${user.email}`;
@@ -196,10 +144,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isAuthLoading,
         isLoginLoading,
         biometricAvailable,
-        onLogin,
-        onRegister,
+        saveAuthData,
         onLogout,
-        onBiometricLogin,
         enableBiometric,
         disableBiometric,
       }}

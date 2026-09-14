@@ -6,8 +6,7 @@ import {
   Typography,
 } from "@/components";
 import { Country, getCountryFromName } from "@/data/countries";
-import { useInputFocus } from "@/hooks";
-import { useAuth } from "@/providers";
+import { useInputFocus, useRegisterMutation } from "@/hooks";
 import { COLORS } from "@/theme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,7 +21,8 @@ import { CountryPicker } from "./components/CountryPicker";
 
 export function RegisterScreen() {
   const router = useRouter();
-  const { onRegister, isLoginLoading } = useAuth();
+  const { mutateAsync: register, isPending: isRegistering } =
+    useRegisterMutation();
   const { setRef, focusNext } = useInputFocus(6);
 
   const [showPassword, setShowPassword] = useState(false);
@@ -37,7 +37,7 @@ export function RegisterScreen() {
     control,
     handleSubmit,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
@@ -55,12 +55,9 @@ export function RegisterScreen() {
     try {
       const formattedData = { ...data };
 
-      // The backend schema specifically uses .regex(/^\+?[0-9]+$/), which means
-      // no hyphens or spaces are allowed! We strip all non-digits from the phone input
-      // and append it directly to the dial code.
       formattedData.phoneNumber = `${selectedCountry?.dialCode || ""}${data.phoneNumber.replace(/\D/g, "")}`;
 
-      await onRegister(formattedData);
+      await register(formattedData);
 
       Toast.show({
         type: "success",
@@ -328,8 +325,9 @@ export function RegisterScreen() {
           <Button
             title="Sign Up"
             onPress={handleSubmit(onSubmit)}
-            loading={isLoginLoading || isSubmitting}
+            loading={isRegistering}
             style={styles.signupBtn}
+            disabled={isRegistering}
           />
         </View>
 
@@ -342,7 +340,7 @@ export function RegisterScreen() {
           </TouchableOpacity>
         </View>
       </KeyboardAwareScrollView>
-      <ModalLoader loading={isLoginLoading} />
+      <ModalLoader loading={isRegistering} />
 
       <CountryPicker
         visible={showPicker}

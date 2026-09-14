@@ -7,7 +7,11 @@ import {
   SvgIcon,
   Typography,
 } from "@/components";
-import { useInputFocus } from "@/hooks";
+import {
+  useInputFocus,
+  useLoginMutation,
+  useBiometricLoginMutation,
+} from "@/hooks";
 import { useBiometric } from "@/hooks/useBiometric";
 import { useAuth } from "@/providers";
 import { COLORS } from "@/theme";
@@ -23,8 +27,10 @@ import { LoginFormData, LoginSchema } from "../schema";
 
 export function LoginScreen() {
   const router = useRouter();
-  const { onLogin, onBiometricLogin, isLoginLoading, biometricAvailable } =
-    useAuth();
+  const { mutateAsync: login, isPending: isLoginLoading } = useLoginMutation();
+  const { mutateAsync: bioLogin, isPending: isBioLoading } =
+    useBiometricLoginMutation();
+  const { biometricAvailable } = useAuth();
   const { authenticate, isSupported, isEnrolled } = useBiometric();
   const { setRef, focusNext } = useInputFocus(2);
   const [showPassword, setShowPassword] = useState(false);
@@ -35,7 +41,7 @@ export function LoginScreen() {
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -46,7 +52,7 @@ export function LoginScreen() {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      await onLogin(data);
+      await login(data);
     } catch (error) {
       // Error is handled by requestAPI and toast
     }
@@ -70,7 +76,7 @@ export function LoginScreen() {
     // Step 3: If both pass, proceed with biometric authentication
     try {
       await authenticate("Log in to Cashify");
-      await onBiometricLogin();
+      await bioLogin();
     } catch (error: any) {
       Toast.show({
         type: "error",
@@ -191,17 +197,18 @@ export function LoginScreen() {
             <Button
               title="Login"
               onPress={handleSubmit(onSubmit)}
-              loading={isLoginLoading || isSubmitting}
+              loading={isLoginLoading}
               style={styles.loginBtn}
               fullWidth={!biometricAvailable}
+              disabled={isLoginLoading || isBioLoading}
             />
             <TouchableOpacity
               style={[
                 styles.bioBtn,
-                (isLoginLoading || isSubmitting) && { opacity: 0.5 },
+                (isLoginLoading || isBioLoading) && { opacity: 0.5 },
               ]}
               onPress={handleBiometric}
-              disabled={isLoginLoading || isSubmitting}
+              disabled={isLoginLoading || isBioLoading}
             >
               <MaterialCommunityIcons
                 name="fingerprint"
@@ -255,7 +262,7 @@ export function LoginScreen() {
           </TouchableOpacity>
         </View>
       </KeyboardAwareScrollView>
-      <ModalLoader loading={isLoginLoading} />
+      <ModalLoader loading={isLoginLoading || isBioLoading} />
       <BiometricSetupModal
         visible={bioModalState !== "hidden"}
         onClose={() => setBioModalState("hidden")}
