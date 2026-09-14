@@ -23,9 +23,7 @@ export class AuthService {
     private readonly config: ConfigService,
   ) {}
 
-  // ---------------------------------------------------------------------
   // Email / password auth
-  // ---------------------------------------------------------------------
 
   async registerWithPassword(fields: {
     email: string;
@@ -73,9 +71,7 @@ export class AuthService {
     return matches ? user : null;
   }
 
-  // ---------------------------------------------------------------------
   // Token issuance + refresh rotation
-  // ---------------------------------------------------------------------
 
   async issueTokens(user: {
     id: string;

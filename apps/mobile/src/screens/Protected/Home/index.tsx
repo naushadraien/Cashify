@@ -1,17 +1,16 @@
 import { Button, SafeAreaWrapper, Typography } from "@/components";
-import { getGreeting } from "@/utils/greetings";
 import { useAuth } from "@/providers";
 import { COLORS } from "@/theme";
+import { getGreeting } from "@/utils/greetings";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import Toast from "react-native-toast-message";
-import React from "react";
 import {
+  ScrollView,
   StyleSheet,
   Switch,
-  View,
   TouchableOpacity,
-  ScrollView,
+  View,
 } from "react-native";
+import Toast from "react-native-toast-message";
 
 export function HomeScreen() {
   const {
@@ -66,7 +65,7 @@ export function HomeScreen() {
           <Typography
             variant="body"
             color={COLORS.PRIMARY_FOREGROUND}
-            style={{ opacity: 0.8 }}
+            style={styles.balanceLabel}
           >
             Total Balance
           </Typography>
@@ -199,7 +198,7 @@ export function HomeScreen() {
           </View>
         </View>
 
-        <View style={{ height: 40 }} />
+        <View style={styles.spacer} />
 
         <Button
           title="Log Out"
@@ -216,7 +215,7 @@ export function HomeScreen() {
           textStyle={{ color: COLORS.DANGER }}
         />
 
-        <View style={{ height: 40 }} />
+        <View style={styles.spacer} />
       </ScrollView>
     </SafeAreaWrapper>
   );
@@ -326,5 +325,11 @@ const styles = StyleSheet.create({
   logoutBtn: {
     borderColor: COLORS.DANGER,
     borderWidth: 1,
+  },
+  balanceLabel: {
+    opacity: 0.8,
+  },
+  spacer: {
+    height: 40,
   },
 });

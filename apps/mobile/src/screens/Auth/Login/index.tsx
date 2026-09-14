@@ -1,25 +1,25 @@
 import {
+  BiometricSetupModal,
   Button,
   Input,
-  SafeAreaWrapper,
-  Typography,
   ModalLoader,
+  SafeAreaWrapper,
   SvgIcon,
-  BiometricSetupModal,
+  Typography,
 } from "@/components";
+import { useInputFocus } from "@/hooks";
+import { useBiometric } from "@/hooks/useBiometric";
+import { useAuth } from "@/providers";
 import { COLORS } from "@/theme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Platform, StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
-import { LoginFormData, LoginSchema } from "../schema";
-import { useAuth } from "@/providers";
-import { useBiometric } from "@/hooks/useBiometric";
-import { useInputFocus } from "@/hooks";
 import Toast from "react-native-toast-message";
+import { LoginFormData, LoginSchema } from "../schema";
 
 export function LoginScreen() {
   const router = useRouter();
@@ -31,8 +31,6 @@ export function LoginScreen() {
   const [bioModalState, setBioModalState] = useState<
     "hidden" | "no-session" | "no-hardware"
   >("hidden");
-
-  const showBiometric = biometricAvailable && isSupported && isEnrolled;
 
   const {
     control,
@@ -179,7 +177,7 @@ export function LoginScreen() {
                         handleFeatureNotAvailable("Password reset")
                       }
                     >
-                      <Typography variant="label" style={{ color: "#3b82f6" }}>
+                      <Typography variant="label" color={COLORS.INFO}>
                         Forgot Password?
                       </Typography>
                     </TouchableOpacity>
@@ -246,7 +244,7 @@ export function LoginScreen() {
         </View>
 
         {/* Spacer to push footer to bottom */}
-        <View style={{ flex: 1 }} />
+        <View style={styles.flex1} />
 
         <View style={styles.footer}>
           <Typography variant="body">Don't have an account? </Typography>
@@ -344,5 +342,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 24,
+  },
+  flex1: {
+    flex: 1,
   },
 });

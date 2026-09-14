@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-// ---------- Path param: GET /users/:id ----------
+// Path param: GET /users/:id
 
 export const UserIdParamSchema = z.object({
   id: z.string().uuid("id must be a valid UUID"),
 });
 export type UserIdParam = z.infer<typeof UserIdParamSchema>;
 
-// ---------- Query params: GET /users/search?name=&email= ----------
+// Query params: GET /users/search?name=&email=
 // email is validated as a real email address and matched exactly (partial
 // email search would let someone enumerate accounts by trying fragments).
 // name is a free-text partial match, meant for a directory-style lookup.

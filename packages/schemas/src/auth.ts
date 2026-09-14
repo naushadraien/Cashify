@@ -3,7 +3,7 @@ import { z } from "zod";
 export const OAuthProvider = z.enum(["google", "facebook", "apple", "github"]);
 export type OAuthProviderType = z.infer<typeof OAuthProvider>;
 
-// ---------- Mobile login payloads (native SDK token -> backend verification) ----------
+// Mobile login payloads (native SDK token -> backend verification)
 
 export const MobileGoogleLoginSchema = z.object({
   idToken: z.string().min(1, "idToken is required"),
@@ -35,7 +35,7 @@ export const MobileGithubLoginSchema = z.object({
 });
 export type MobileGithubLogin = z.infer<typeof MobileGithubLoginSchema>;
 
-// ---------- Email / password auth ----------
+// Email / password auth
 
 export const RegisterSchema = z
   .object({
@@ -98,7 +98,7 @@ export const LoginSchema = z.object({
 });
 export type LoginInput = z.infer<typeof LoginSchema>;
 
-// ---------- Profile ----------
+// Profile
 
 export const UpdateProfileSchema = z.object({
   name: z.string().min(1).optional(),
@@ -106,7 +106,7 @@ export const UpdateProfileSchema = z.object({
 });
 export type UpdateProfileInput = z.infer<typeof UpdateProfileSchema>;
 
-// ---------- Email verification ----------
+// Email verification
 
 export const ConfirmEmailVerificationSchema = z.object({
   token: z.string().min(1),
@@ -115,7 +115,7 @@ export type ConfirmEmailVerificationInput = z.infer<
   typeof ConfirmEmailVerificationSchema
 >;
 
-// ---------- Password reset ----------
+// Password reset
 
 export const ForgotPasswordSchema = z.object({
   email: z.string().email(),
@@ -128,7 +128,7 @@ export const ResetPasswordSchema = z.object({
 });
 export type ResetPasswordInput = z.infer<typeof ResetPasswordSchema>;
 
-// ---------- Token endpoints ----------
+// Token endpoints
 // refreshToken is optional in the body for both: mobile always sends it
 // explicitly (no cookies available), web omits it and relies on the
 // httpOnly cookie set at login -- the guard/service fill in whichever is
@@ -144,7 +144,7 @@ export const LogoutSchema = z.object({
 });
 export type LogoutInput = z.infer<typeof LogoutSchema>;
 
-// ---------- Response shapes ----------
+// Response shapes
 
 export const AuthUserSchema = z.object({
   id: z.string().uuid(),

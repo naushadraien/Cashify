@@ -1,4 +1,5 @@
-import { Toaster, ScreenLoader } from "@/components";
+import { COLORS } from "@/theme";
+import { ScreenLoader, Toaster } from "@/components";
 import { AppProviders, useAuth } from "@/providers";
 import { FONTS } from "@/theme";
 import { useFonts } from "expo-font";
@@ -6,7 +7,6 @@ import { SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { LogBox } from "react-native";
-import { COLORS } from "@/theme";
 import "react-native-reanimated";
 
 SplashScreen.preventAutoHideAsync();
@@ -46,7 +46,12 @@ function AuthNavigator() {
     return <ScreenLoader />;
   }
   return (
-    <Stack screenOptions={{ headerShown: false }}>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        contentStyle: { backgroundColor: COLORS.BACKGROUND },
+      }}
+    >
       <Stack.Protected guard={isAuthenticated}>
         <Stack.Screen name="(protected)" />
       </Stack.Protected>

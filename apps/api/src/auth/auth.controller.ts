@@ -32,10 +32,8 @@ export class AuthController {
     private readonly config: ConfigService,
   ) {}
 
-  // =======================================================================
   // EMAIL / PASSWORD — used identically by web and mobile, no provider
   // token involved so there's nothing native-SDK-specific about it.
-  // =======================================================================
 
   @Post("register")
   @ApiOperation({ summary: "Create an account with email + password" })
@@ -68,9 +66,7 @@ export class AuthController {
     return this.authService.issueTokens(req.user as any);
   }
 
-  // =======================================================================
   // SHARED — token refresh, logout, current user (web + mobile alike)
-  // =======================================================================
 
   @Post("refresh")
   @HttpCode(HttpStatus.OK)

@@ -1,5 +1,5 @@
 {
-  "name": "turbo-auth-boilerplate",
+  "name": "cashify",
   "private": true,
   "workspaces": [
     "apps/*",

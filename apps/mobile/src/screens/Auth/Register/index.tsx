@@ -1,24 +1,24 @@
 import {
   Button,
   Input,
+  ModalLoader,
   SafeAreaWrapper,
   Typography,
-  ModalLoader,
 } from "@/components";
 import { Country, getCountryFromName } from "@/data/countries";
-import { useAuth } from "@/providers";
 import { useInputFocus } from "@/hooks";
+import { useAuth } from "@/providers";
 import { COLORS } from "@/theme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Platform, StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import Toast from "react-native-toast-message";
 import { RegisterFormData, RegisterSchema } from "../schema";
 import { CountryPicker } from "./components/CountryPicker";
-import Toast from "react-native-toast-message";
 
 export function RegisterScreen() {
   const router = useRouter();
@@ -119,14 +119,14 @@ export function RegisterScreen() {
                   onChangeText={onChange}
                   onBlur={onBlur}
                   error={errors.firstName?.message}
-                  containerStyle={{ flex: 1 }}
+                  containerStyle={styles.flex1}
                   inputRef={setRef(0)}
                   onSubmitEditing={() => focusNext(0)}
                   returnKeyType="next"
                 />
               )}
             />
-            <View style={{ width: 16 }} />
+            <View style={styles.hSpacer} />
             <Controller
               control={control}
               name="lastName"
@@ -138,7 +138,7 @@ export function RegisterScreen() {
                   onChangeText={onChange}
                   onBlur={onBlur}
                   error={errors.lastName?.message}
-                  containerStyle={{ flex: 1 }}
+                  containerStyle={styles.flex1}
                   inputRef={setRef(1)}
                   onSubmitEditing={() => focusNext(1)}
                   returnKeyType="next"
@@ -229,14 +229,17 @@ export function RegisterScreen() {
                 onSubmitEditing={() => focusNext(3)}
                 returnKeyType="next"
                 leftIcon={
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <View style={styles.phonePrefixContainer}>
                     <MaterialCommunityIcons
                       name="phone-outline"
                       size={20}
                       color={COLORS.MUTED_FOREGROUND}
                     />
                     {selectedCountry && (
-                      <Typography variant="bodyBold" style={{ marginLeft: 8 }}>
+                      <Typography
+                        variant="bodyBold"
+                        style={styles.phonePrefixText}
+                      >
                         {selectedCountry.dialCode}
                       </Typography>
                     )}
@@ -411,5 +414,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 8,
     marginLeft: 4,
+  },
+  flex1: {
+    flex: 1,
+  },
+  hSpacer: {
+    width: 16,
+  },
+  phonePrefixContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  phonePrefixText: {
+    marginLeft: 8,
   },
 });

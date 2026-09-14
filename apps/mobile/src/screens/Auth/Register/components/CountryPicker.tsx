@@ -46,7 +46,7 @@ export function CountryPicker({
             />
           </TouchableOpacity>
           <Typography variant="h3">Select Country</Typography>
-          <View style={{ width: 24 }} />
+          <View style={styles.rightSpacer} />
         </View>
 
         <View style={styles.searchContainer}>
@@ -130,5 +130,8 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: COLORS.BORDER,
     marginLeft: 60,
+  },
+  rightSpacer: {
+    width: 24,
   },
 });
