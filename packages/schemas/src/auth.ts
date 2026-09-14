@@ -62,7 +62,10 @@ export const RegisterSchema = z
       .string({ required_error: "Password is required" })
       .min(8, "Password must be at least 8 characters")
       .max(100, "Password must be less than 100 characters")
-      .regex(/[0-9]/, "Password must contain at least one number"),
+      .regex(/[0-9]/, "Password must contain at least one number")
+      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+      .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+      .regex(/[\W_]/, "Password must contain at least one special character"),
     confirmPassword: z
       .string({ required_error: "Please confirm your password" })
       .min(1, "Please confirm your password"),
@@ -84,7 +87,14 @@ export const RegisterServerSchema = z.object({
     .max(15)
     .regex(/^\+?[0-9]+$/),
   email: z.string().email(),
-  password: z.string().min(8).max(100).regex(/[0-9]/),
+  password: z
+    .string()
+    .min(8)
+    .max(100)
+    .regex(/[0-9]/)
+    .regex(/[A-Z]/)
+    .regex(/[a-z]/)
+    .regex(/[\W_]/),
 });
 export type RegisterServerInput = z.infer<typeof RegisterServerSchema>;
 
@@ -94,7 +104,12 @@ export const LoginSchema = z.object({
     .email("Please enter a valid email address"),
   password: z
     .string({ required_error: "Password is required" })
-    .min(1, "Password is required"),
+    .min(8, "Password must be at least 8 characters")
+    .max(100, "Password must be less than 100 characters")
+    .regex(/[0-9]/, "Password must contain at least one number")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+    .regex(/[\W_]/, "Password must contain at least one special character"),
 });
 export type LoginInput = z.infer<typeof LoginSchema>;
 
