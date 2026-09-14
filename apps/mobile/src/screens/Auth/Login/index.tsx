@@ -103,7 +103,7 @@ export function LoginScreen() {
         bottomOffset={62}
       >
         <View style={styles.header}>
-          <Typography variant="h1" style={styles.title}>
+          <Typography variant="h2" style={styles.title}>
             Welcome Back to Cashify
           </Typography>
           <Typography
@@ -122,7 +122,7 @@ export function LoginScreen() {
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
                 label="Email Address"
-                placeholder="Email Address"
+                placeholder="Enter your email address"
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
@@ -150,7 +150,7 @@ export function LoginScreen() {
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input
                   label="Password"
-                  placeholder="Password"
+                  placeholder="Enter your password"
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}

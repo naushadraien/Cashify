@@ -95,7 +95,7 @@ export function RegisterScreen() {
               color={COLORS.TEXT_COLOR}
             />
           </TouchableOpacity>
-          <Typography variant="h1" style={styles.title}>
+          <Typography variant="h2" style={styles.title}>
             Create Account
           </Typography>
           <Typography variant="body" color={COLORS.MUTED_FOREGROUND}>
